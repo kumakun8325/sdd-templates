@@ -8,19 +8,29 @@ AI支援開発のためのドキュメント駆動開発テンプレートです
 
 ```
 sdd-templates/
-├── .kiro/steering/          # コアドキュメント
+├── .kiro/steering/          # コアドキュメント（SDD）
 │   ├── requirements.md      # 要件定義書
 │   ├── design.md            # 設計ドキュメント
 │   └── tasks.md             # タスク管理
-├── .agent/workflows/        # AIワークフロー
+├── .agent/workflows/        # Antigravityワークフロー
 │   ├── deploy.md            # デプロイ手順
-│   └── feature-development.md  # 機能開発フロー
+│   ├── feature-development.md  # 機能開発フロー
+│   ├── plan.md              # タスク計画・Issue作成
+│   ├── verify.md            # 検証・デプロイ
+│   └── sdd.md               # SDD統合ワークフロー
+├── .claude/commands/        # Claude Codeコマンド
+│   ├── start.md             # 実装開始
+│   ├── finish.md            # 実装完了・PR作成
+│   └── review.md            # コードレビュー
 ├── docs/                    # 追加ドキュメント
 │   ├── SPECIFICATION.md     # 詳細仕様書
-│   └── DEVELOPMENT_WORKFLOW.md # 開発ワークフロー
+│   ├── DEVELOPMENT_WORKFLOW.md # 開発ワークフロー
+│   ├── handoff.md           # AI間引き継ぎ
+│   └── SESSION_LOG.md       # セッション履歴
 ├── examples/                # 使用例
 │   └── GAME_PROJECT_KICKSTART.md
 ├── CHANGELOG.md             # 変更履歴
+├── CLAUDE.md                # Claude Code設定
 ├── PROJECT_README.md        # プロジェクトREADMEテンプレート
 └── README.md                # このファイル
 ```
@@ -49,7 +59,9 @@ git clone https://github.com/kumakun8325/sdd-templates.git
 # 必要なファイルをプロジェクトにコピー
 cp -r sdd-templates/.kiro your-project/
 cp -r sdd-templates/.agent your-project/
+cp -r sdd-templates/.claude your-project/
 cp -r sdd-templates/docs your-project/
+cp sdd-templates/CLAUDE.md your-project/
 ```
 
 ## 🔄 プレースホルダー置換
@@ -75,12 +87,30 @@ cp -r sdd-templates/docs your-project/
 | `design.md` | アーキテクチャ、モジュール設計、UI設計 |
 | `tasks.md` | スプリント管理、TODOリスト |
 
-### AIワークフロー（.agent/workflows/）
+### Antigravityワークフロー（.agent/workflows/）
+
+| コマンド | 目的 |
+|----------|------|
+| `/plan` | タスク計画・GitHub Issue作成 |
+| `/verify` | 実装検証・デプロイ |
+| `/sdd` | SDD統合ワークフロー（req, design, tasks, impl） |
+| `/deploy` | 本番/プレビューデプロイ手順 |
+| `/feature-development` | ブランチ作成→開発→マージのフロー |
+
+### Claude Codeコマンド（.claude/commands/）
+
+| コマンド | 目的 |
+|----------|------|
+| `/start` | handoff.mdを読み、実装開始 |
+| `/finish` | 実装完了、テスト、PR作成 |
+| `/review` | コードレビュー |
+
+### 2AI分業ドキュメント（docs/）
 
 | ファイル | 目的 |
 |----------|------|
-| `deploy.md` | 本番/プレビューデプロイ手順 |
-| `feature-development.md` | ブランチ作成→開発→マージのフロー |
+| `handoff.md` | Antigravity ↔ Claude Code 間の引き継ぎ |
+| `SESSION_LOG.md` | セッション履歴 |
 
 ## ⚠️ 重要な規則
 
