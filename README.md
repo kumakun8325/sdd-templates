@@ -37,18 +37,26 @@ sdd-templates/
 
 ## 🚀 使い方
 
-### GitHub Template として使う場合
+### 方法1: GitHub Template（推奨・最もシンプル）
 
-1. このリポジトリをFork、または "Use this template" ボタンをクリック
-2. 新規リポジトリ名を入力して作成
-3. 各ファイルをプロジェクトに合わせて編集
+1. このページ上部の **"Use this template"** → **"Create a new repository"** をクリック
+2. リポジトリ名を入力 → **Create repository**
+3. `git clone` でローカルにダウンロード
 
-### degit を使う場合
+```bash
+git clone https://github.com/YOUR_USERNAME/my-new-project.git
+cd my-new-project
+```
+
+### 方法2: degit を使う場合
 
 ```bash
 npx degit kumakun8325/sdd-templates my-new-project
 cd my-new-project
+git init
 ```
+
+> 📖 **開発ワークフローの詳細**: [docs/DEVELOPMENT_WORKFLOW.md](docs/DEVELOPMENT_WORKFLOW.md)
 
 ### 手動でコピーする場合
 
