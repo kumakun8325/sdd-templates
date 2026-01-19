@@ -1,0 +1,40 @@
+# 自動テスト実行
+#
+# 機能:
+# - PR作成時・更新時にテストを実行
+# - mainへのpush時にテストを実行
+# - テスト失敗時はマージをブロック（Branch Protectionと組み合わせ）
+
+name: Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run lint
+      run: npm run lint
+      continue-on-error: true # 初期は警告のみ
+      
+    - name: Run type check
+      run: npx tsc --noEmit
+      
+    - name: Run unit tests
+      run: npm test
