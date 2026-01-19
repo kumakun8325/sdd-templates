@@ -6,66 +6,87 @@ model: inherit
 
 # /finish - Complete Implementation
 
-Finish implementation and hand off to Antigravity for verification.
+実装を完了し、Antigravityに検証を引き継ぐ。
 
-## Steps
+## 自動品質チェック
 
-### 1. Self-Review (REQUIRED)
+> **重要**: 以下のスキルを順番に自動実行する。問題があれば修正してから次へ進む。
 
-**Option A: Quick Review (推奨)**
+### Step 1: コードレビュー（自動）
+
+変更されたファイルに対して `code-review` スキルを実行：
+
 ```
-/pr-review-toolkit:review-pr code errors
+変更されたファイルをレビューしてください
 ```
-コード品質 + エラーハンドリング漏れをチェック。
 
-**Option B: Full Review (大きな変更時)**
-```
-/pr-review-toolkit:review-pr all parallel
-```
-全エージェントを並列実行（tests, errors, types, code, simplify）。
+チェック項目：
+- [ ] 品質問題なし
+- [ ] パフォーマンス問題なし
+- [ ] セキュリティ問題なし
 
-**Option C: プロジェクト固有レビュー**
-```
-/review src/managers/ChangedFile.ts
-```
-アーキテクチャ準拠チェック（architecture.md, design.md参照）。
+**緊急の問題があれば修正してから次へ。**
 
-Fix any critical or warning issues found.
+### Step 2: ドキュメント確認（自動）
 
-### 2. Run Tests
+新規/変更した関数・クラスに `docstring` スキルを実行：
+
+```
+新しく追加した関数にドキュメントを追加してください
+```
+
+チェック項目：
+- [ ] 公開関数にJSDoc/docstringあり
+- [ ] パラメータと戻り値の説明あり
+
+### Step 3: テスト確認（自動）
+
+テストがない場合、`testing` スキルを実行：
+
+```
+新しい機能のテストを生成してください
+```
+
+その後テストを実行：
 ```bash
 npm run test
 ```
-- If tests pass, continue to next step
-- If tests fail, use the `test-analyzer` agent:
-  ```
-  Use the test-analyzer agent to analyze the failures
-  ```
-- Fix failing tests before proceeding
 
-### 3. Verify Build
+チェック項目：
+- [ ] テストが存在する
+- [ ] テストがパスする
+
+### Step 4: リファクタリング確認（自動）
+
+長すぎる関数や重複コードがあれば `refactoring` スキルを実行：
+
+```
+このファイルをリファクタリングしてください
+```
+
+チェック項目：
+- [ ] 関数は50行以下
+- [ ] 重複コードなし
+
+---
+
+## 手動チェック
+
+### 5. ビルド確認
 ```bash
 npm run lint
 npm run build
 ```
-- Fix any errors before proceeding
 
-### 4. Update Task Document
-Edit the task doc (e.g., `docs/task_XX.md`):
-- Mark completed steps with `[x]`
-- Add any implementation notes
+### 6. タスクドキュメント更新
+`docs/task_XX.md` を編集：
+- 完了したステップに `[x]` をつける
 
-### 5. Update Documentation
-Use the `documentation-writer` agent to ensure consistency:
-```
-Use the documentation-writer agent to update docs for this feature
-```
-Or manually check and update if needed:
-- `docs/requirements.md` - Add new requirement IDs
-- `docs/design.md` - Update architecture/types
+### 7. ドキュメント更新（必要に応じて）
+- `docs/requirements.md` - 新しい要件IDを追加
+- `docs/design.md` - アーキテクチャ/型を更新
 
-### 6. Update Handoff
-Edit `docs/handoff.md`:
+### 8. handoff.md 更新
 
 ```markdown
 ## Current Task
@@ -74,65 +95,72 @@ Edit `docs/handoff.md`:
 
 ## Handoff: Claude → Antigravity
 ### Completed Work
-- [What was implemented]
+- [実装した内容]
 
 ### Changed Files
 - path/to/file1.ts
 - path/to/file2.ts
 
 ### Test Instructions
-1. Run `npm run dev`
-2. Open http://localhost:5173/
-3. [Steps to test]
-
-### Tests Added
-- [ ] test/file.test.ts - description
+1. `npm run dev` を実行
+2. http://localhost:5173/ を開く
+3. [テスト手順]
 
 ### Known Issues
-- [Any limitations or issues]
+- [制限事項や既知の問題]
 ```
 
-### 7. Update SESSION_LOG.md
-Add entry to `docs/SESSION_LOG.md`:
+### 9. SESSION_LOG.md 更新
+
 ```markdown
 ## YYYY-MM-DD
 
 ### Completed
-- Task #XX: [Description]
+- Task #XX: [説明]
 
 ### Changed Files
 - file1.ts
 - file2.ts
 ```
 
-### 8. Start Dev Server
+### 10. 動作確認
 ```bash
 npm run dev
 ```
-Confirm app works at http://localhost:5173/
 
-### 9. Commit and Push
+### 11. コミット＆プッシュ
 ```bash
 git add .
 git commit -m "feat: Implement #XX - description"
 git push -u origin HEAD
 ```
 
-### 10. Create Pull Request
+### 12. PR作成
 ```bash
 gh pr create --title "feat: description" --body "Closes #XX"
 ```
 
-## Checklist
-- [ ] /review on main files
-- [ ] Tests pass (if applicable)
-- [ ] Build passes
-- [ ] Lint passes
-- [ ] Task doc updated
-- [ ] requirements.md updated (if needed)
-- [ ] design.md updated (if needed)
-- [ ] handoff.md updated
-- [ ] SESSION_LOG.md updated
-- [ ] Dev server works
-- [ ] Changes committed
-- [ ] PR created
+---
+
+## チェックリスト（最終確認）
+
+### 自動スキル
+- [ ] code-review 実行済み
+- [ ] docstring 確認済み
+- [ ] testing 確認済み
+- [ ] refactoring 確認済み
+
+### ビルド＆テスト
+- [ ] lint パス
+- [ ] build パス
+- [ ] test パス
+
+### ドキュメント
+- [ ] タスクドキュメント更新
+- [ ] handoff.md 更新
+- [ ] SESSION_LOG.md 更新
+
+### 完了
+- [ ] 動作確認OK
+- [ ] コミット済み
+- [ ] PR作成済み
