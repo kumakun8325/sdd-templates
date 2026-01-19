@@ -1,0 +1,27 @@
+# 自動レビュアー割り当て
+#
+# 機能:
+# - PR作成時に自動でレビュアーを割り当て
+# - チームメンバーから自動選択
+#
+# 設定方法:
+# - CODEOWNERSファイルでファイルごとの担当者を設定
+# - または本ワークフローでユーザー名を直接指定
+
+name: Auto Assign Reviewers
+
+on:
+  pull_request:
+    types: [opened, ready_for_review]
+
+jobs:
+  assign-reviewers:
+    # ドラフトPRは除外
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Auto-assign reviewers
+        uses: kentaro-m/auto-assign-action@v2
+        with:
+          configuration-path: '.github/auto-assign.yml'
