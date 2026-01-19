@@ -25,8 +25,14 @@ sdd-templates/
 ├── docs/                    # 追加ドキュメント
 │   ├── SPECIFICATION.md     # 詳細仕様書
 │   ├── DEVELOPMENT_WORKFLOW.md # 開発ワークフロー
+│   ├── MULTI_CLAUDE_GUIDE.md # 並列Claude開発ガイド
+│   ├── GITHUB_ACTIONS_SETUP.md # GitHub Actions連携
 │   ├── handoff.md           # AI間引き継ぎ
 │   └── SESSION_LOG.md       # セッション履歴
+├── .github/workflows/       # GitHub Actions
+│   └── claude-responder.yml # @claudeトリガー
+├── scripts/                 # ユーティリティ
+│   └── multi-claude-setup.sh # 並列Claude起動
 ├── examples/                # 使用例
 │   └── GAME_PROJECT_KICKSTART.md
 ├── CHANGELOG.md             # 変更履歴
