@@ -1,72 +1,72 @@
-# GitHub Project 連携ガイド
+# GitHub Project Integration Guide
 
-Issue作成時に自動でProjectに追加し、進捗を一元管理します。
+Automatically add Issues to Project on creation for centralized progress management.
 
 ---
 
-## 🚀 クイックセットアップ
+## Quick Setup
 
-### 1. GitHub Projectを作成
+### 1. Create GitHub Project
 
 1. GitHub → Projects → New project
-2. **Board** テンプレートを選択
-3. 以下の列を作成:
-   - 📋 **Backlog** - 未着手
-   - 🔍 **Planning** - Antigravity設計中
-   - 🛠️ **In Progress** - Claude Code実装中
-   - 👀 **Review** - 検証待ち
-   - ✅ **Done** - 完了
+2. Select **Board** template
+3. Create the following columns:
+   - 📋 **Backlog** - Not started
+   - 🔍 **Planning** - AI designing
+   - 🛠️ **In Progress** - Implementation
+   - 👀 **Review** - Pending verification
+   - ✅ **Done** - Completed
 
-### 2. Project URLを取得
+### 2. Get Project URL
 
-Project ページのURLをコピー:
+Copy the Project page URL:
 ```
 https://github.com/users/YOUR_USERNAME/projects/1
 ```
 
-### 3. Personal Access Token (PAT) を作成
+### 3. Create Personal Access Token (PAT)
 
 1. GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens
 2. **Generate new token**
-3. 権限:
-   - **Repository access**: 対象リポジトリを選択
+3. Permissions:
+   - **Repository access**: Select target repositories
    - **Permissions**:
      - Issues: Read and write
      - Pull requests: Read and write
      - Projects: Read and write
-4. トークンをコピー
+4. Copy the token
 
-### 4. リポジトリに設定を追加
+### 4. Add Repository Settings
 
 **Settings → Secrets and variables → Actions**
 
 **Secrets:**
-| 名前 | 値 |
-|------|-----|
-| `ADD_TO_PROJECT_PAT` | 作成したPAT |
+| Name | Value |
+|------|-------|
+| `ADD_TO_PROJECT_PAT` | Created PAT |
 
 **Variables:**
-| 名前 | 値 |
-|------|-----|
-| `PROJECT_URL` | プロジェクトURL |
+| Name | Value |
+|------|-------|
+| `PROJECT_URL` | Project URL |
 
 ---
 
-## 📋 使い方
+## Usage
 
-### 自動連携
+### Automatic Integration
 
-| トリガー | アクション |
-|----------|-----------|
-| Issue作成 | 自動でProjectに追加 |
-| Issue にラベル追加 | ステータス更新 |
-| PR作成 | 自動でProjectに追加 |
-| PRマージ | Issueに `done` ラベル |
+| Trigger | Action |
+|---------|--------|
+| Issue created | Auto-add to Project |
+| Label added to Issue | Update status |
+| PR created | Auto-add to Project |
+| PR merged | Add `done` label to Issue |
 
-### ラベルとステータスの対応
+### Label to Status Mapping
 
-| ラベル | Projectステータス |
-|--------|------------------|
+| Label | Project Status |
+|-------|----------------|
 | `planning` | Planning |
 | `in-progress` | In Progress |
 | `ready-for-review` | Review |
@@ -74,44 +74,44 @@ https://github.com/users/YOUR_USERNAME/projects/1
 
 ---
 
-## 🔄 ワークフローとの連携
+## Workflow Integration
 
 ```
 /plan
-  ↓ Issue作成 → 自動でProjectに追加（Backlog）
-  ↓ ラベル: planning → Planning列に移動
+  ↓ Issue created → Auto-add to Project (Backlog)
+  ↓ Label: planning → Move to Planning column
 
 /start
-  ↓ ラベル: in-progress → In Progress列に移動
+  ↓ Label: in-progress → Move to In Progress column
 
 /finish
-  ↓ PR作成 → 自動でProjectに追加
-  ↓ ラベル: ready-for-review → Review列に移動
+  ↓ PR created → Auto-add to Project
+  ↓ Label: ready-for-review → Move to Review column
 
 /verify (PASS)
-  ↓ PRマージ → ラベル: done → Done列に移動
+  ↓ PR merged → Label: done → Move to Done column
 ```
 
 ---
 
-## 📊 Projectビューの活用
+## Project View Usage
 
-### カンバンビュー
-- ドラッグ&ドロップでステータス変更
-- 担当者でフィルタリング
+### Kanban View
+- Drag & drop to change status
+- Filter by assignee
 
-### テーブルビュー
-- カスタムフィールド追加（優先度、見積もりなど）
-- ソート/グループ化
+### Table View
+- Add custom fields (priority, estimates, etc.)
+- Sort/group
 
-### タイムラインビュー
-- スプリント計画
-- 期限管理
+### Timeline View
+- Sprint planning
+- Deadline management
 
 ---
 
-## ⚠️ 注意事項
+## Notes
 
-- PAT の有効期限を確認（90日など）
-- Projectは公開/非公開を選択可能
-- 複数リポジトリを1つのProjectで管理可能
+- Check PAT expiration (90 days, etc.)
+- Project can be public or private
+- Multiple repositories can be managed in one Project

@@ -1,9 +1,9 @@
-# 自動テスト実行
+# Automated Test Execution
 #
-# 機能:
-# - PR作成時・更新時にテストを実行
-# - mainへのpush時にテストを実行
-# - テスト失敗時はマージをブロック（Branch Protectionと組み合わせ）
+# Features:
+# - Runs tests on PR creation/update
+# - Runs tests on push to main
+# - Blocks merge on test failure (with Branch Protection)
 
 name: Test
 
@@ -31,7 +31,7 @@ jobs:
       
     - name: Run lint
       run: npm run lint
-      continue-on-error: true # 初期は警告のみ
+      continue-on-error: true # Warning only initially
       
     - name: Run type check
       run: npx tsc --noEmit

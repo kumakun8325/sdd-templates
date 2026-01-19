@@ -1,56 +1,70 @@
-# GitHub Actions Claude連携 セットアップガイド
+# GitHub Actions Claude Integration Setup Guide
 
-IssueやPRコメントに `@claude` と書くだけで、Claude Codeが自動で応答・実装します。
+Guide for setting up GitHub Actions that automatically triggers Claude Code when `@claude` is mentioned in Issue comments or PR review comments.
 
 ---
 
-## 🚀 クイックスタート
+## Quick Setup
 
-### 1. APIキーを設定
+### 1. Get Anthropic API Key
 
-GitHubリポジトリの Settings → Secrets and variables → Actions → New repository secret
+1. Go to https://console.anthropic.com/
+2. Get API key
 
-| Secret名 | 値 |
-|----------|-----|
-| `ANTHROPIC_API_KEY` | Anthropic APIキー |
+### 2. Add API Key to Repository Secrets
 
-### 2. 使い方
+1. **Repository Settings**
+2. **Secrets and variables → Actions**
+3. **New repository secret**
+   - Name: `ANTHROPIC_API_KEY`
+   - Value: Your API key
 
-Issueを作成して、本文に `@claude` を含める：
+### 3. Enable Workflow
 
-```markdown
-@claude 
+The workflow file `.github/workflows/claude-responder.yml` is already included in the template.
 
-以下の機能を実装してください：
-- ユーザー認証機能
-- ログイン/ログアウト
+---
+
+## Usage
+
+### Comment on Issue
+
+```
+@claude Please implement this feature
 ```
 
-これだけで：
-1. Claude Codeが自動起動
-2. ブランチ作成
-3. 実装
-4. PR作成
+Claude will:
+1. Analyze the request
+2. Create a branch
+3. Implement the feature
+4. Create a PR
+
+### PR Review Comment
+
+```
+@claude Please fix based on this review
+```
+
+Claude will:
+1. Analyze the comment
+2. Make fixes
+3. Push commits
 
 ---
 
-## ⚙️ オプション設定
+## Optional Settings
 
-### GLM API (Z.AI) を使用する場合
+### Using GLM API (Z.AI)
 
-コスト削減のためGLM-4.7を使用できます。
+1. **Secrets** → Add:
+   - Name: `ZAI_API_KEY`
+   - Value: Z.AI API key
 
-**Secrets:**
-| Secret名 | 値 |
-|----------|-----|
-| `ZAI_API_KEY` | Z.AI APIキー |
+2. **Variables** → Add:
+   - Name: `ANTHROPIC_BASE_URL`
+   - Value: `https://api.z.ai/v1`
 
-**Variables:**
-| Variable名 | 値 |
-|------------|-----|
-| `ANTHROPIC_BASE_URL` | `https://api.z.ai/api/anthropic` |
-
-**ワークフローの修正:**
+3. Modify workflow file:
 ```yaml
 env:
   ANTHROPIC_API_KEY: ${{ secrets.ZAI_API_KEY }}
@@ -59,70 +73,18 @@ env:
 
 ---
 
-## 📋 使用例
+## Troubleshooting
 
-### バグ修正を依頼
-
-```markdown
-@claude
-
-ログイン画面でパスワードが表示されてしまうバグを修正してください。
-ファイル: src/components/LoginForm.tsx
-```
-
-### 機能追加を依頼
-
-```markdown
-@claude
-
-以下の機能を追加してください：
-- ダークモード切り替えボタン
-- LocalStorageで設定を保存
-- システム設定に追従するオプション
-```
-
-### PRレビューを依頼
-
-PRのコメントで：
-```markdown
-@claude
-
-このPRをレビューして、改善点があれば指摘してください。
-```
+| Issue | Solution |
+|-------|----------|
+| Claude doesn't respond | Check API key validity |
+| PR not created | Check write permissions |
+| GL API error | Check BASE_URL |
 
 ---
 
-## 🔧 トラブルシューティング
+## Security Notes
 
-### Actions が実行されない
-
-1. リポジトリのSettings → Actions → General で「Allow all actions」が選択されているか確認
-2. Workflowファイルが `.github/workflows/` にあるか確認
-3. APIキーが正しく設定されているか確認
-
-### Claude Code がエラーになる
-
-1. Actions Logを確認
-2. APIキーの有効期限を確認
-3. 使用量制限に達していないか確認
-
----
-
-## 🔐 セキュリティ注意事項
-
-- APIキーは必ずSecretsに保存（ハードコードしない）
-- パブリックリポジトリでは、フォークからのトリガーに注意
-- 必要に応じて `if` 条件でトリガーを制限
-
----
-
-## 📊 マルチエージェント開発との使い分け
-
-| 状況 | 推奨 |
-|------|------|
-| 集中開発セッション | マルチエージェント（tmux） |
-| スマホから指示 | GitHub Actions |
-| 複雑な機能実装 | マルチエージェント |
-| 簡単なバグ修正 | GitHub Actions |
-| リアルタイム対話 | マルチエージェント |
-| 非同期作業 | GitHub Actions |
+- Never commit API keys directly to code
+- Rotate API keys regularly
+- Limit action permissions to minimum required
